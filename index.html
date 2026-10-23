@@ -1,0 +1,3102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuditFlow | Audit Management Dashboard</title>
+
+<style>
+/* =========================================================
+   AUDITFLOW - COMPLETE AUDIT MANAGEMENT DASHBOARD
+   ========================================================= */
+
+:root {
+    --navy: #10233f;
+    --navy2: #17375e;
+    --blue: #2878f0;
+    --light-blue: #eaf3ff;
+    --green: #16a36b;
+    --light-green: #daf7eb;
+    --orange: #ee9b18;
+    --light-orange: #fff0d2;
+    --red: #ef5350;
+    --light-red: #ffe5e5;
+    --purple: #7658e8;
+    --light-purple: #eeeaff;
+    --background: #f5f8fc;
+    --white: #ffffff;
+    --text: #172b4d;
+    --muted: #718096;
+    --border: #e3eaf2;
+    --shadow: 0 5px 20px rgba(22, 50, 90, 0.07);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 245px;
+    background: linear-gradient(180deg, #10233f, #0b1b31);
+    color: white;
+    padding: 22px 16px;
+    z-index: 100;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 30px;
+    padding-left: 3px;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #55a6ff, #27c58a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.logo-text {
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.logo-subtitle {
+    display: block;
+    font-size: 9px;
+    opacity: 0.65;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+.nav button {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #d7e3f4;
+    text-align: left;
+    padding: 13px;
+    border-radius: 9px;
+    margin: 3px 0;
+    font-size: 14px;
+}
+
+.nav button:hover,
+.nav button.active {
+    background: #1b477b;
+    color: white;
+}
+
+.sidebar-quote {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 75px;
+    background: #173354;
+    border: 1px solid #24476e;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #dce8f7;
+}
+
+.sidebar-user {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: white;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.main {
+    margin-left: 245px;
+    padding: 25px 30px;
+    width: calc(100% - 245px);
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+}
+
+.topbar h1 {
+    margin: 0;
+    font-size: 25px;
+}
+
+.topbar p {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 5px 0 0;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input,
+.select,
+.textarea {
+    width: 100%;
+    border: 1px solid #d6e0ec;
+    background: white;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text);
+    outline: none;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(40,120,240,.08);
+}
+
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-weight: 700;
+}
+
+.btn-primary {
+    background: var(--blue);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1769dd;
+}
+
+.btn-light {
+    background: white;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+/* =========================================================
+   SUMMARY CARDS
+   ========================================================= */
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 13px;
+    margin-bottom: 15px;
+}
+
+.card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 17px;
+    box-shadow: var(--shadow);
+}
+
+.metric {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.metric h2 {
+    margin: 3px 0;
+    font-size: 26px;
+}
+
+.metric p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.metric-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    background: var(--light-blue);
+    color: var(--blue);
+}
+
+.progress-bar {
+    height: 6px;
+    background: #e7edf4;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress-bar span {
+    display: block;
+    height: 100%;
+    border-radius: 20px;
+}
+
+/* =========================================================
+   CONTENT LAYOUT
+   ========================================================= */
+
+.content-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 15px;
+}
+
+.panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 17px;
+    box-shadow: var(--shadow);
+    margin-bottom: 15px;
+}
+
+.panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.panel-heading h2 {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* =========================================================
+   FILTERS
+   ========================================================= */
+
+.filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 13px;
+}
+
+.form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    color: #5d6b80;
+    margin-bottom: 5px;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: collapse;
+}
+
+th {
+    background: #f5f8fc;
+    text-align: left;
+    padding: 12px 10px;
+    font-size: 11px;
+    color: #66758a;
+}
+
+td {
+    padding: 11px 10px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+}
+
+.task-name {
+    font-weight: 700;
+}
+
+.employee-small {
+    display: block;
+    color: #8794a7;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.priority-high {
+    background: var(--light-red);
+    color: #d63c3c;
+}
+
+.priority-medium {
+    background: var(--light-orange);
+    color: #b56c00;
+}
+
+.priority-low {
+    background: var(--light-green);
+    color: #168252;
+}
+
+.status-completed {
+    background: var(--light-green);
+    color: #128158;
+}
+
+.status-progress {
+    background: var(--light-blue);
+    color: #216bd5;
+}
+
+.status-pending {
+    background: #ffe9dd;
+    color: #d86b18;
+}
+
+.status-carry {
+    background: var(--light-purple);
+    color: #6650c8;
+}
+
+.status-select {
+    width: auto;
+    padding: 6px 8px;
+    font-size: 10px;
+}
+
+.edit-btn {
+    background: transparent;
+    border: none;
+    color: #31577f;
+    font-size: 17px;
+}
+
+/* =========================================================
+   END OF DAY
+   ========================================================= */
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.character-count {
+    text-align: right;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+/* =========================================================
+   PROGRESS RING
+   ========================================================= */
+
+.progress-ring {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px auto 15px;
+    position: relative;
+}
+
+.progress-ring::after {
+    content: "";
+    width: 86px;
+    height: 86px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.progress-ring strong {
+    position: relative;
+    z-index: 2;
+    font-size: 22px;
+}
+
+.legend-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 10px 0;
+    font-size: 12px;
+}
+
+.legend-row strong {
+    margin-left: auto;
+}
+
+.dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+/* =========================================================
+   ACTIVITY
+   ========================================================= */
+
+.activity {
+    border-left: 2px solid #dce6f2;
+    padding-left: 15px;
+}
+
+.activity-item {
+    position: relative;
+    margin-bottom: 17px;
+    font-size: 12px;
+}
+
+.activity-item::before {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--blue);
+    border: 3px solid #e9f2ff;
+    border-radius: 50%;
+    left: -21px;
+    top: 2px;
+}
+
+.activity-item b {
+    display: block;
+}
+
+.activity-item span {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(16,35,63,.6);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-box {
+    width: min(650px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 13px;
+    padding: 22px;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 19px;
+}
+
+.close-btn {
+    border: none;
+    background: #eef2f7;
+    border-radius: 50%;
+    width: 31px;
+    height: 31px;
+    font-size: 18px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 13px;
+}
+
+.form-full {
+    grid-column: 1 / -1;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+    margin-top: 17px;
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.toast {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: #142a47;
+    color: white;
+    padding: 13px 17px;
+    border-radius: 8px;
+    display: none;
+    z-index: 1000;
+    font-size: 13px;
+}
+
+/* =========================================================
+   MOBILE NAV
+   ========================================================= */
+
+.mobile-nav {
+    display: none;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:1100px) {
+
+    .summary-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media(max-width:760px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px 12px 75px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+    }
+
+    .topbar h1 {
+        font-size: 20px;
+    }
+
+    .top-actions .btn {
+        display: none;
+    }
+
+    .summary-cards {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-full {
+        grid-column: auto;
+    }
+
+    .mobile-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: white;
+        border-top: 1px solid var(--border);
+        z-index: 300;
+        justify-content: space-around;
+    }
+
+    .mobile-nav button {
+        background: white;
+        border: none;
+        color: var(--muted);
+        font-size: 10px;
+    }
+
+    .mobile-nav button.active {
+        color: var(--blue);
+    }
+
+}
+
+@media(max-width:450px) {
+
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+     ========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="logo-area">
+
+        <div class="logo">
+            ✓
+        </div>
+
+        <div>
+            <div class="logo-text">AuditFlow</div>
+            <span class="logo-subtitle">
+                TRACK • PERFORM • ACHIEVE
+            </span>
+        </div>
+
+    </div>
+
+    <nav class="nav">
+
+        <button class="active" onclick="showSection('dashboard', this)">
+            🏠 &nbsp; Dashboard
+        </button>
+
+        <button onclick="scrollToTasks(this)">
+            📋 &nbsp; My Tasks
+        </button>
+
+        <button onclick="showTeam(this)">
+            👥 &nbsp; Team Overview
+        </button>
+
+        <button onclick="scrollToProgress(this)">
+            📊 &nbsp; Audit Progress
+        </button>
+
+        <button onclick="scrollToReports(this)">
+            📑 &nbsp; Reports
+        </button>
+
+        <button onclick="openSettings()">
+            ⚙️ &nbsp; Settings
+        </button>
+
+    </nav>
+
+    <div class="sidebar-quote">
+        <b>“Small steps make big progress.”</b>
+        <br><br>
+        Keep the audit moving every day.
+    </div>
+
+    <div class="sidebar-user">
+
+        <div class="avatar">
+            PK
+        </div>
+
+        <div>
+            <b>Paras Khadakkar</b>
+            <br>
+            <span style="opacity:.6">
+                Team Member
+            </span>
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+     ========================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div>
+
+        <h1>
+            Welcome, Paras! 👋
+        </h1>
+
+        <p>
+            Here's your audit progress and today's tasks.
+        </p>
+
+    </div>
+
+    <div class="top-actions">
+
+        <input
+            type="date"
+            id="mainDate"
+            class="input"
+            onchange="dateChanged()"
+        >
+
+        <button
+            class="btn btn-primary"
+            onclick="openTaskModal()"
+        >
+            ＋ Add Task
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     SUMMARY CARDS
+     ========================================================= -->
+
+<section class="summary-cards">
+
+    <div class="card metric">
+
+        <div>
+            <p>Total Tasks</p>
+
+            <h2 id="totalTasks">
+                0
+            </h2>
+
+            <p>Selected employee/date</p>
+        </div>
+
+        <div class="metric-icon">
+            📋
+        </div>
+
+    </div>
+
+
+    <div class="card metric">
+
+        <div>
+
+            <p style="color:var(--green)">
+                Completed
+            </p>
+
+            <h2 id="completedTasks">
+                0
+            </h2>
+
+            <div class="progress-bar">
+                <span
+                    id="completedBar"
+                    style="background:var(--green);width:0%"
+                ></span>
+            </div>
+
+        </div>
+
+        <div
+            class="metric-icon"
+            style="background:var(--light-green);color:var(--green)"
+        >
+            ✓
+        </div>
+
+    </div>
+
+
+    <div class="card metric">
+
+        <div>
+
+            <p style="color:var(--orange)">
+                Pending / Carry
+            </p>
+
+            <h2 id="pendingTasks">
+                0
+            </h2>
+
+            <div class="progress-bar">
+                <span
+                    id="pendingBar"
+                    style="background:var(--orange);width:0%"
+                ></span>
+            </div>
+
+        </div>
+
+        <div
+            class="metric-icon"
+            style="background:var(--light-orange);color:var(--orange)"
+        >
+            ◷
+        </div>
+
+    </div>
+
+
+    <div class="card metric">
+
+        <div>
+
+            <p style="color:var(--purple)">
+                Days Remaining
+            </p>
+
+            <h2 id="daysRemaining">
+                20
+            </h2>
+
+            <p>
+                of 20 planned days
+            </p>
+
+        </div>
+
+        <div
+            class="metric-icon"
+            style="background:var(--light-purple);color:var(--purple)"
+        >
+            📅
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     MAIN GRID
+     ========================================================= -->
+
+<div class="content-grid">
+
+
+<section>
+
+<!-- =========================================================
+     TASK PANEL
+     ========================================================= -->
+
+<div class="panel" id="tasksPanel">
+
+    <div class="panel-heading">
+
+        <h2>
+            📋 &nbsp; Your Daily Tasks
+        </h2>
+
+        <button
+            class="btn btn-light"
+            onclick="openTaskModal()"
+        >
+            Manage Tasks
+        </button>
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="filters">
+
+        <div>
+
+            <label class="form-label">
+                DATE
+            </label>
+
+            <input
+                id="filterDate"
+                class="input"
+                type="date"
+                onchange="filterChanged()"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label class="form-label">
+                EMPLOYEE
+            </label>
+
+            <select
+                id="employeeFilter"
+                class="select"
+                onchange="filterChanged()"
+            >
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label class="form-label">
+                AUDIT
+            </label>
+
+            <select
+                class="select"
+                id="auditFilter"
+            >
+
+                <option>
+                    FY 2026-27 • Financial Audit
+                </option>
+
+                <option>
+                    FY 2026-27 • Tax Audit
+                </option>
+
+                <option>
+                    FY 2026-27 • Internal Audit
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- TASK TABLE -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Task Description</th>
+
+                    <th>Priority</th>
+
+                    <th>Planned Date</th>
+
+                    <th>Status</th>
+
+                    <th>Remarks / Carry Forward</th>
+
+                    <th>Edit</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="taskTable">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     END OF DAY REPORT
+     ========================================================= -->
+
+<div class="panel" id="reportsPanel">
+
+    <div class="panel-heading">
+
+        <h2>
+            📝 &nbsp; End-of-Day Summary
+        </h2>
+
+        <span
+            style="font-size:11px;color:var(--muted)"
+        >
+            Auto-saved
+        </span>
+
+    </div>
+
+
+    <div class="summary-grid">
+
+        <div>
+
+            <label class="form-label">
+                WHAT DID YOU ACHIEVE TODAY?
+            </label>
+
+            <textarea
+                id="achievedText"
+                class="textarea"
+                maxlength="500"
+                placeholder="Example: Completed bank reconciliation, verified 15 vouchers and completed the revenue working paper..."
+                oninput="saveSummary()"
+            ></textarea>
+
+            <div
+                class="character-count"
+                id="achievedCount"
+            >
+                0/500
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <label class="form-label">
+                WHAT'S CARRIED FORWARD TO TOMORROW?
+            </label>
+
+            <textarea
+                id="carryText"
+                class="textarea"
+                maxlength="500"
+                placeholder="Mention unfinished work, pending documents or anything that must continue tomorrow..."
+                oninput="saveSummary()"
+            ></textarea>
+
+            <div
+                class="character-count"
+                id="carryCount"
+            >
+                0/500
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div
+        style="
+        display:flex;
+        justify-content:flex-end;
+        margin-top:12px;
+        "
+    >
+
+        <button
+            class="btn btn-primary"
+            onclick="submitDay()"
+        >
+            ➤ Submit Day
+        </button>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     RIGHT SIDEBAR
+     ========================================================= -->
+
+<aside id="progressPanel">
+
+
+<!-- AUDIT PROGRESS -->
+
+<div class="panel">
+
+    <div class="panel-heading">
+
+        <h2>
+            📊 Audit Progress
+        </h2>
+
+        <b id="progressPercentage">
+            0%
+        </b>
+
+    </div>
+
+
+    <div
+        class="progress-ring"
+        id="progressRing"
+        style="
+        background:
+        conic-gradient(
+            var(--green) 0%,
+            var(--green) 0%,
+            #e7edf4 0%,
+            #e7edf4 100%
+        );
+        "
+    >
+
+        <strong id="ringText">
+            0%
+        </strong>
+
+    </div>
+
+
+    <div class="legend-row">
+
+        <span
+            class="dot"
+            style="background:var(--green)"
+        ></span>
+
+        Completed
+
+        <strong id="legendCompleted">
+            0
+        </strong>
+
+    </div>
+
+
+    <div class="legend-row">
+
+        <span
+            class="dot"
+            style="background:var(--orange)"
+        ></span>
+
+        Pending
+
+        <strong id="legendPending">
+            0
+        </strong>
+
+    </div>
+
+
+    <div class="legend-row">
+
+        <span
+            class="dot"
+            style="background:#b8c4d4"
+        ></span>
+
+        Total
+
+        <strong id="legendTotal">
+            0
+        </strong>
+
+    </div>
+
+</div>
+
+
+<!-- RECENT ACTIVITY -->
+
+<div class="panel">
+
+    <div class="panel-heading">
+
+        <h2>
+            🔔 Recent Updates
+        </h2>
+
+        <button
+            class="btn btn-light"
+            style="padding:6px 8px;font-size:10px"
+            onclick="showToast('All recent updates displayed')"
+        >
+            View All
+        </button>
+
+    </div>
+
+
+    <div
+        class="activity"
+        id="activityList"
+    >
+    </div>
+
+</div>
+
+
+<!-- PRIORITY LEGEND -->
+
+<div class="panel">
+
+    <div class="panel-heading">
+
+        <h2>
+            🎯 Priority Legend
+        </h2>
+
+    </div>
+
+
+    <div class="legend-row">
+
+        <span
+            class="dot"
+            style="background:var(--red)"
+        ></span>
+
+        <b>High</b>
+
+        <span style="color:var(--muted)">
+            Critical
+        </span>
+
+    </div>
+
+
+    <div class="legend-row">
+
+        <span
+            class="dot"
+            style="background:var(--orange)"
+        ></span>
+
+        <b>Medium</b>
+
+        <span style="color:var(--muted)">
+            Important
+        </span>
+
+    </div>
+
+
+    <div class="legend-row">
+
+        <span
+            class="dot"
+            style="background:var(--green)"
+        ></span>
+
+        <b>Low</b>
+
+        <span style="color:var(--muted)">
+            Can be later
+        </span>
+
+    </div>
+
+</div>
+
+</aside>
+
+</div>
+
+</main>
+
+
+<!-- =========================================================
+     MOBILE NAVIGATION
+     ========================================================= -->
+
+<div class="mobile-nav">
+
+    <button
+        class="active"
+        onclick="window.scrollTo({top:0,behavior:'smooth'})"
+    >
+        🏠
+        <br>
+        Home
+    </button>
+
+    <button
+        onclick="scrollToTasks()"
+    >
+        📋
+        <br>
+        Tasks
+    </button>
+
+    <button
+        onclick="showTeam()"
+    >
+        👥
+        <br>
+        Team
+    </button>
+
+    <button
+        onclick="scrollToReports()"
+    >
+        📑
+        <br>
+        Reports
+    </button>
+
+</div>
+
+
+<!-- =========================================================
+     ADD / EDIT TASK MODAL
+     ========================================================= -->
+
+<div
+    class="modal"
+    id="taskModal"
+>
+
+<div class="modal-box">
+
+    <div class="modal-header">
+
+        <h2 id="modalTitle">
+            Add Audit Task
+        </h2>
+
+        <button
+            class="close-btn"
+            onclick="closeTaskModal()"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div class="form-grid">
+
+
+        <div>
+
+            <label class="form-label">
+                EMPLOYEE
+            </label>
+
+            <select
+                id="modalEmployee"
+                class="select"
+            >
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label class="form-label">
+                PRIORITY
+            </label>
+
+            <select
+                id="modalPriority"
+                class="select"
+            >
+
+                <option value="High">
+                    High
+                </option>
+
+                <option
+                    value="Medium"
+                    selected
+                >
+                    Medium
+                </option>
+
+                <option value="Low">
+                    Low
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-full">
+
+            <label class="form-label">
+                TASK DESCRIPTION
+            </label>
+
+            <input
+                id="modalTask"
+                class="input"
+                placeholder="e.g. Verify purchase invoices"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label class="form-label">
+                PLANNED DATE
+            </label>
+
+            <input
+                id="modalDate"
+                class="input"
+                type="date"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label class="form-label">
+                STATUS
+            </label>
+
+            <select
+                id="modalStatus"
+                class="select"
+            >
+
+                <option>
+                    Pending
+                </option>
+
+                <option>
+                    In Progress
+                </option>
+
+                <option>
+                    Completed
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-full">
+
+            <label class="form-label">
+                REMARK / CARRY-FORWARD NOTE
+            </label>
+
+            <textarea
+                id="modalRemark"
+                class="textarea"
+                placeholder="What was completed? What remains?"
+            ></textarea>
+
+        </div>
+
+    </div>
+
+
+    <div class="modal-actions">
+
+        <button
+            class="btn btn-light"
+            onclick="closeTaskModal()"
+        >
+            Cancel
+        </button>
+
+        <button
+            class="btn btn-primary"
+            onclick="saveTask()"
+        >
+            Save Task
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+     ========================================================= -->
+
+<div
+    class="toast"
+    id="toast"
+>
+</div>
+
+
+<script>
+
+/* =========================================================
+   DATA
+   ========================================================= */
+
+const STORAGE_KEY = "AUDITFLOW_DATABASE_V1";
+
+const today = new Date()
+    .toISOString()
+    .split("T")[0];
+
+
+let database =
+    JSON.parse(
+        localStorage.getItem(STORAGE_KEY)
+    );
+
+
+/* =========================================================
+   DEFAULT DATABASE
+   ========================================================= */
+
+if (!database) {
+
+    database = {
+
+        employees: [
+
+            "Paras Khadakkar",
+            "Sneha Verma",
+            "Rohan Mehta",
+            "Aarav Sharma"
+
+        ],
+
+        tasks: [
+
+            {
+                id: 1,
+                employee: "Paras Khadakkar",
+                task: "Review bank reconciliations",
+                priority: "High",
+                date: today,
+                status: "Completed",
+                remark: "Reconciled 3 accounts."
+            },
+
+            {
+                id: 2,
+                employee: "Paras Khadakkar",
+                task: "Verify expense vouchers",
+                priority: "High",
+                date: today,
+                status: "Completed",
+                remark: "Checked 15 vouchers."
+            },
+
+            {
+                id: 3,
+                employee: "Paras Khadakkar",
+                task: "Test internal controls — procurement",
+                priority: "Medium",
+                date: today,
+                status: "In Progress",
+                remark: "5 of 10 controls completed."
+            },
+
+            {
+                id: 4,
+                employee: "Paras Khadakkar",
+                task: "Review GST calculations",
+                priority: "Medium",
+                date: today,
+                status: "Pending",
+                remark: "To be completed tomorrow."
+            },
+
+            {
+                id: 5,
+                employee: "Paras Khadakkar",
+                task: "Check fixed asset register",
+                priority: "Low",
+                date: today,
+                status: "Pending",
+                remark: "Documents pending."
+            },
+
+            {
+                id: 6,
+                employee: "Sneha Verma",
+                task: "Verify expense vouchers",
+                priority: "High",
+                date: today,
+                status: "Completed",
+                remark: "Completed sample testing."
+            },
+
+            {
+                id: 7,
+                employee: "Rohan Mehta",
+                task: "Test payroll controls",
+                priority: "Medium",
+                date: today,
+                status: "In Progress",
+                remark: "Awaiting two documents."
+            }
+
+        ],
+
+        summaries: {},
+
+        activities: [
+
+            [
+                "Paras Khadakkar",
+                "Updated procurement control status",
+                "Today, 4:12 PM"
+            ],
+
+            [
+                "Sneha Verma",
+                "Completed expense voucher testing",
+                "Today, 3:15 PM"
+            ],
+
+            [
+                "Rohan Mehta",
+                "Added remark for payroll controls",
+                "Today, 2:48 PM"
+            ]
+
+        ]
+
+    };
+
+    saveDatabase();
+
+}
+
+
+/* =========================================================
+   SAVE DATABASE
+   ========================================================= */
+
+function saveDatabase() {
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(database)
+    );
+
+}
+
+
+/* =========================================================
+   INITIALIZATION
+   ========================================================= */
+
+function initialize() {
+
+    document.getElementById("mainDate").value = today;
+
+    document.getElementById("filterDate").value = today;
+
+    populateEmployees();
+
+    loadSummary();
+
+    renderDashboard();
+
+    renderActivities();
+
+}
+
+
+/* =========================================================
+   EMPLOYEES
+   ========================================================= */
+
+function populateEmployees() {
+
+    const employeeFilter =
+        document.getElementById("employeeFilter");
+
+    const modalEmployee =
+        document.getElementById("modalEmployee");
+
+
+    employeeFilter.innerHTML =
+        `<option value="All">
+            All Employees
+        </option>`;
+
+
+    database.employees.forEach(
+        function(employee) {
+
+            employeeFilter.innerHTML +=
+                `<option value="${escapeHTML(employee)}">
+                    ${escapeHTML(employee)}
+                </option>`;
+
+        }
+    );
+
+
+    modalEmployee.innerHTML = "";
+
+
+    database.employees.forEach(
+        function(employee) {
+
+            modalEmployee.innerHTML +=
+                `<option value="${escapeHTML(employee)}">
+                    ${escapeHTML(employee)}
+                </option>`;
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   GET CURRENT TASKS
+   ========================================================= */
+
+function getVisibleTasks() {
+
+    const date =
+        document.getElementById("filterDate").value;
+
+    const employee =
+        document.getElementById("employeeFilter").value;
+
+
+    return database.tasks.filter(
+        function(task) {
+
+            return (
+
+                task.date === date &&
+
+                (
+                    employee === "All" ||
+                    task.employee === employee
+                )
+
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   RENDER DASHBOARD
+   ========================================================= */
+
+function renderDashboard() {
+
+    const tasks =
+        getVisibleTasks();
+
+
+    const total =
+        tasks.length;
+
+
+    const completed =
+        tasks.filter(
+            task => task.status === "Completed"
+        ).length;
+
+
+    const pending =
+        total - completed;
+
+
+    const percentage =
+        total === 0
+            ? 0
+            : Math.round(
+                completed / total * 100
+            );
+
+
+    document.getElementById("totalTasks")
+        .innerText = total;
+
+
+    document.getElementById("completedTasks")
+        .innerText = completed;
+
+
+    document.getElementById("pendingTasks")
+        .innerText = pending;
+
+
+    document.getElementById("completedBar")
+        .style.width = percentage + "%";
+
+
+    document.getElementById("pendingBar")
+        .style.width =
+        (100 - percentage) + "%";
+
+
+    document.getElementById("progressPercentage")
+        .innerText =
+        percentage + "%";
+
+
+    document.getElementById("ringText")
+        .innerText =
+        percentage + "%";
+
+
+    document.getElementById("legendCompleted")
+        .innerText =
+        completed;
+
+
+    document.getElementById("legendPending")
+        .innerText =
+        pending;
+
+
+    document.getElementById("legendTotal")
+        .innerText =
+        total;
+
+
+    document.getElementById("progressRing")
+        .style.background =
+        `
+        conic-gradient(
+            var(--green) 0% ${percentage}%,
+            #e7edf4 ${percentage}% 100%
+        )
+        `;
+
+
+    renderTaskTable(tasks);
+
+}
+
+
+/* =========================================================
+   TASK TABLE
+   ========================================================= */
+
+function renderTaskTable(tasks) {
+
+    const table =
+        document.getElementById("taskTable");
+
+
+    if (tasks.length === 0) {
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="7"
+                    style="
+                    text-align:center;
+                    padding:40px;
+                    color:var(--muted);
+                    "
+                >
+
+                    No tasks found.
+
+                    <br><br>
+
+                    Click
+                    <b>Add Task</b>
+                    to create a task.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    table.innerHTML = "";
+
+
+    tasks.forEach(
+        function(task, index) {
+
+            let priorityClass =
+                task.priority.toLowerCase();
+
+            let statusClass =
+                "status-pending";
+
+
+            if (task.status === "Completed") {
+
+                statusClass =
+                    "status-completed";
+
+            }
+
+            else if (
+                task.status === "In Progress"
+            ) {
+
+                statusClass =
+                    "status-progress";
+
+            }
+
+
+            let carryBadge = "";
+
+
+            if (
+                task.status !== "Completed" &&
+                task.remark
+            ) {
+
+                carryBadge = `
+                    <span class="badge status-carry">
+                        Carry Forward
+                    </span>
+                `;
+
+            }
+
+
+            table.innerHTML += `
+
+                <tr>
+
+                    <td>
+                        ${index + 1}.
+                    </td>
+
+
+                    <td>
+
+                        <span class="task-name">
+                            ${escapeHTML(task.task)}
+                        </span>
+
+                        <span class="employee-small">
+                            ${escapeHTML(task.employee)}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="badge priority-${priorityClass}"
+                        >
+                            ${task.priority}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+                        ${formatDate(task.date)}
+                    </td>
+
+
+                    <td>
+
+                        <select
+                            class="select status-select"
+                            onchange="
+                                changeTaskStatus(
+                                    ${task.id},
+                                    this.value
+                                )
+                            "
+                        >
+
+                            <option
+                                ${task.status === "Pending"
+                                    ? "selected"
+                                    : ""}
+                            >
+                                Pending
+                            </option>
+
+                            <option
+                                ${task.status === "In Progress"
+                                    ? "selected"
+                                    : ""}
+                            >
+                                In Progress
+                            </option>
+
+                            <option
+                                ${task.status === "Completed"
+                                    ? "selected"
+                                    : ""}
+                            >
+                                Completed
+                            </option>
+
+                        </select>
+
+                    </td>
+
+
+                    <td>
+
+                        ${escapeHTML(
+                            task.remark || "—"
+                        )}
+
+                        ${carryBadge}
+
+                    </td>
+
+
+                    <td>
+
+                        <button
+                            class="edit-btn"
+                            onclick="
+                                editTask(${task.id})
+                            "
+                        >
+                            ✎
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CHANGE STATUS
+   ========================================================= */
+
+function changeTaskStatus(id, newStatus) {
+
+    const task =
+        database.tasks.find(
+            task => task.id === id
+        );
+
+
+    if (!task) return;
+
+
+    task.status = newStatus;
+
+
+    if (
+        newStatus === "Pending" ||
+        newStatus === "In Progress"
+    ) {
+
+        automaticallyCarryForward(task);
+
+    }
+
+
+    addActivity(
+        task.employee,
+        `Updated "${task.task}" to ${newStatus}`
+    );
+
+
+    saveDatabase();
+
+    renderDashboard();
+
+    renderActivities();
+
+    showToast("Task status updated ✓");
+
+}
+
+
+/* =========================================================
+   AUTOMATIC CARRY FORWARD
+   ========================================================= */
+
+function automaticallyCarryForward(task) {
+
+    const currentDate =
+        new Date(
+            task.date + "T00:00:00"
+        );
+
+
+    currentDate.setDate(
+        currentDate.getDate() + 1
+    );
+
+
+    const nextDate =
+        currentDate
+            .toISOString()
+            .split("T")[0];
+
+
+    const alreadyExists =
+        database.tasks.some(
+            existingTask =>
+
+                existingTask.employee ===
+                task.employee &&
+
+                existingTask.date ===
+                nextDate &&
+
+                existingTask.task ===
+                task.task +
+                " (carried forward)"
+
+        );
+
+
+    if (!alreadyExists) {
+
+        database.tasks.push({
+
+            id:
+                Date.now() +
+                Math.random(),
+
+            employee:
+                task.employee,
+
+            task:
+                task.task +
+                " (carried forward)",
+
+            priority:
+                task.priority,
+
+            date:
+                nextDate,
+
+            status:
+                "Pending",
+
+            remark:
+                "Automatically carried forward from " +
+                formatDate(task.date) +
+                "."
+
+        });
+
+    }
+
+}
+
+
+/* =========================================================
+   ADD ACTIVITY
+   ========================================================= */
+
+function addActivity(
+    employee,
+    message
+) {
+
+    database.activities.unshift([
+
+        employee,
+
+        message,
+
+        new Date().toLocaleString(
+            "en-IN"
+        )
+
+    ]);
+
+
+    database.activities =
+        database.activities.slice(0, 10);
+
+}
+
+
+/* =========================================================
+   RENDER ACTIVITIES
+   ========================================================= */
+
+function renderActivities() {
+
+    const container =
+        document.getElementById(
+            "activityList"
+        );
+
+
+    container.innerHTML = "";
+
+
+    database.activities
+        .slice(0, 5)
+        .forEach(
+            function(activity) {
+
+                container.innerHTML += `
+
+                    <div class="activity-item">
+
+                        <b>
+                            ${escapeHTML(
+                                activity[0]
+                            )}
+                        </b>
+
+                        ${escapeHTML(
+                            activity[1]
+                        )}
+
+                        <br>
+
+                        <span>
+                            ${escapeHTML(
+                                activity[2]
+                            )}
+                        </span>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   ADD / EDIT TASK MODAL
+   ========================================================= */
+
+let editingTaskId = null;
+
+
+function openTaskModal(taskId = null) {
+
+    editingTaskId = taskId;
+
+
+    const modal =
+        document.getElementById(
+            "taskModal"
+        );
+
+
+    const title =
+        document.getElementById(
+            "modalTitle"
+        );
+
+
+    if (taskId) {
+
+        title.innerText =
+            "Edit Audit Task";
+
+
+        const task =
+            database.tasks.find(
+                task => task.id === taskId
+            );
+
+
+        if (!task) return;
+
+
+        document.getElementById(
+            "modalEmployee"
+        ).value =
+            task.employee;
+
+
+        document.getElementById(
+            "modalPriority"
+        ).value =
+            task.priority;
+
+
+        document.getElementById(
+            "modalTask"
+        ).value =
+            task.task;
+
+
+        document.getElementById(
+            "modalDate"
+        ).value =
+            task.date;
+
+
+        document.getElementById(
+            "modalStatus"
+        ).value =
+            task.status;
+
+
+        document.getElementById(
+            "modalRemark"
+        ).value =
+            task.remark || "";
+
+    }
+
+    else {
+
+        title.innerText =
+            "Add Audit Task";
+
+
+        const selectedEmployee =
+            document.getElementById(
+                "employeeFilter"
+            ).value;
+
+
+        document.getElementById(
+            "modalEmployee"
+        ).value =
+            selectedEmployee === "All"
+                ? database.employees[0]
+                : selectedEmployee;
+
+
+        document.getElementById(
+            "modalPriority"
+        ).value =
+            "Medium";
+
+
+        document.getElementById(
+            "modalTask"
+        ).value = "";
+
+
+        document.getElementById(
+            "modalDate"
+        ).value =
+            document.getElementById(
+                "filterDate"
+            ).value;
+
+
+        document.getElementById(
+            "modalStatus"
+        ).value =
+            "Pending";
+
+
+        document.getElementById(
+            "modalRemark"
+        ).value = "";
+
+    }
+
+
+    modal.classList.add("show");
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+   ========================================================= */
+
+function closeTaskModal() {
+
+    document
+        .getElementById("taskModal")
+        .classList.remove("show");
+
+}
+
+
+/* =========================================================
+   SAVE TASK
+   ========================================================= */
+
+function saveTask() {
+
+    const employee =
+        document.getElementById(
+            "modalEmployee"
+        ).value;
+
+
+    const priority =
+        document.getElementById(
+            "modalPriority"
+        ).value;
+
+
+    const taskText =
+        document.getElementById(
+            "modalTask"
+        ).value.trim();
+
+
+    const date =
+        document.getElementById(
+            "modalDate"
+        ).value;
+
+
+    const status =
+        document.getElementById(
+            "modalStatus"
+        ).value;
+
+
+    const remark =
+        document.getElementById(
+            "modalRemark"
+        ).value.trim();
+
+
+    if (!taskText) {
+
+        showToast(
+            "Please enter a task description."
+        );
+
+        return;
+
+    }
+
+
+    if (!date) {
+
+        showToast(
+            "Please select a date."
+        );
+
+        return;
+
+    }
+
+
+    if (editingTaskId) {
+
+        const task =
+            database.tasks.find(
+                task =>
+                    task.id ===
+                    editingTaskId
+            );
+
+
+        task.employee =
+            employee;
+
+        task.priority =
+            priority;
+
+        task.task =
+            taskText;
+
+        task.date =
+            date;
+
+        task.status =
+            status;
+
+        task.remark =
+            remark;
+
+
+        addActivity(
+            employee,
+            `Edited task "${taskText}"`
+        );
+
+    }
+
+    else {
+
+        database.tasks.push({
+
+            id:
+                Date.now(),
+
+            employee:
+                employee,
+
+            task:
+                taskText,
+
+            priority:
+                priority,
+
+            date:
+                date,
+
+            status:
+                status,
+
+            remark:
+                remark
+
+        });
+
+
+        addActivity(
+            employee,
+            `Added task "${taskText}"`
+        );
+
+    }
+
+
+    saveDatabase();
+
+    closeTaskModal();
+
+    populateEmployees();
+
+    renderDashboard();
+
+    renderActivities();
+
+    showToast(
+        "Task saved successfully ✓"
+    );
+
+}
+
+
+/* =========================================================
+   EDIT TASK
+   ========================================================= */
+
+function editTask(id) {
+
+    openTaskModal(id);
+
+}
+
+
+/* =========================================================
+   SAVE END-OF-DAY SUMMARY
+   ========================================================= */
+
+function saveSummary() {
+
+    const employee =
+        document.getElementById(
+            "employeeFilter"
+        ).value === "All"
+            ? "Paras Khadakkar"
+            : document.getElementById(
+                "employeeFilter"
+            ).value;
+
+
+    const date =
+        document.getElementById(
+            "filterDate"
+        ).value;
+
+
+    const achieved =
+        document.getElementById(
+            "achievedText"
+        ).value;
+
+
+    const carry =
+        document.getElementById(
+            "carryText"
+        ).value;
+
+
+    database.summaries[
+        employee + "|" + date
+    ] = {
+
+        achieved:
+            achieved,
+
+        carry:
+            carry
+
+    };
+
+
+    document.getElementById(
+        "achievedCount"
+    ).innerText =
+        achieved.length + "/500";
+
+
+    document.getElementById(
+        "carryCount"
+    ).innerText =
+        carry.length + "/500";
+
+
+    saveDatabase();
+
+}
+
+
+/* =========================================================
+   LOAD SUMMARY
+   ========================================================= */
+
+function loadSummary() {
+
+    const employee =
+        document.getElementById(
+            "employeeFilter"
+        ).value === "All"
+            ? "Paras Khadakkar"
+            : document.getElementById(
+                "employeeFilter"
+            ).value;
+
+
+    const date =
+        document.getElementById(
+            "filterDate"
+        ).value;
+
+
+    const summary =
+        database.summaries[
+            employee + "|" + date
+        ] || {};
+
+
+    document.getElementById(
+        "achievedText"
+    ).value =
+        summary.achieved || "";
+
+
+    document.getElementById(
+        "carryText"
+    ).value =
+        summary.carry || "";
+
+
+    document.getElementById(
+        "achievedCount"
+    ).innerText =
+        (
+            summary.achieved || ""
+        ).length +
+        "/500";
+
+
+    document.getElementById(
+        "carryCount"
+    ).innerText =
+        (
+            summary.carry || ""
+        ).length +
+        "/500";
+
+}
+
+
+/* =========================================================
+   SUBMIT DAY
+   ========================================================= */
+
+function submitDay() {
+
+    saveSummary();
+
+
+    const employee =
+        document.getElementById(
+            "employeeFilter"
+        ).value === "All"
+            ? "Paras Khadakkar"
+            : document.getElementById(
+                "employeeFilter"
+            ).value;
+
+
+    addActivity(
+        employee,
+        "Submitted end-of-day report"
+    );
+
+
+    saveDatabase();
+
+    renderActivities();
+
+
+    showToast(
+        "End-of-day report submitted ✓"
+    );
+
+}
+
+
+/* =========================================================
+   FILTER CHANGED
+   ========================================================= */
+
+function filterChanged() {
+
+    renderDashboard();
+
+    loadSummary();
+
+}
+
+
+/* =========================================================
+   DATE CHANGED
+   ========================================================= */
+
+function dateChanged() {
+
+    const date =
+        document.getElementById(
+            "mainDate"
+        ).value;
+
+
+    document.getElementById(
+        "filterDate"
+    ).value =
+        date;
+
+
+    renderDashboard();
+
+    loadSummary();
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function scrollToTasks(button) {
+
+    document
+        .getElementById("tasksPanel")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+function scrollToProgress(button) {
+
+    document
+        .getElementById("progressPanel")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+function scrollToReports(button) {
+
+    document
+        .getElementById("reportsPanel")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+function showSection(section, button) {
+
+    document
+        .querySelectorAll(".nav button")
+        .forEach(
+            btn =>
+                btn.classList.remove(
+                    "active"
+                )
+        );
+
+
+    if (button) {
+
+        button.classList.add(
+            "active"
+        );
+
+    }
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+function showTeam() {
+
+    showToast(
+        "Team Overview — select an employee from the employee filter."
+    );
+
+}
+
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+function openSettings() {
+
+    const action =
+        confirm(
+            "Do you want to reset the demo data?\n\nOK = Reset\nCancel = Keep current data"
+        );
+
+
+    if (action) {
+
+        localStorage.removeItem(
+            STORAGE_KEY
+        );
+
+        location.reload();
+
+    }
+
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.innerText =
+        message;
+
+
+    toast.style.display =
+        "block";
+
+
+    clearTimeout(
+        window.toastTimer
+    );
+
+
+    window.toastTimer =
+        setTimeout(
+            function() {
+
+                toast.style.display =
+                    "none";
+
+            },
+            2500
+        );
+
+}
+
+
+/* =========================================================
+   UTILITY FUNCTIONS
+   ========================================================= */
+
+function formatDate(dateString) {
+
+    return new Date(
+        dateString + "T00:00:00"
+    ).toLocaleDateString(
+        "en-IN",
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+function escapeHTML(value) {
+
+    return String(value || "")
+        .replace(
+            /[&<>"']/g,
+            function(character) {
+
+                return {
+
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
+
+                }[character];
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL WHEN CLICKING OUTSIDE
+   ========================================================= */
+
+document
+    .getElementById("taskModal")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target ===
+                this
+            ) {
+
+                closeTaskModal();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   START APPLICATION
+   ========================================================= */
+
+initialize();
+
+</script>
+
+</body>
+</html>
