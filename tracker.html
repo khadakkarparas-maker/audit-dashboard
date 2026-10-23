@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Audit Team Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#1c2333;--mut:#6b7488;--line:#e3e7f0;--pri:#4f46e5;--pri2:#7c3aed;--ok:#10b981;--warn:#f59e0b;--bad:#ef4444;--chip:#eef0fb;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1320;--card:#181d2e;--ink:#e8ecf7;--mut:#98a2bd;--line:#2a3150;--chip:#232a45}}
+:root[data-theme="dark"]{--bg:#0f1320;--card:#181d2e;--ink:#e8ecf7;--mut:#98a2bd;--line:#2a3150;--chip:#232a45}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+header{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;border-radius:18px;padding:20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+header h1{margin:0;font-size:22px}header p{margin:2px 0 0;opacity:.85;font-size:13px}
+.dates{display:flex;gap:6px;align-items:center}
+.dates button,.dates input{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:10px;padding:8px 10px;font:inherit;cursor:pointer}
+.dates input{color-scheme:dark}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.kpi b{display:block;font-size:26px}.kpi span{color:var(--mut);font-size:13px}
+.tabs{display:flex;gap:6px;margin:6px 0 12px;overflow-x:auto}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 16px;border-radius:999px;cursor:pointer;font:inherit;white-space:nowrap}
+.tab.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.emp-h{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700}
+.emp-h h3{margin:0;font-size:16px}.emp-h small{color:var(--mut)}
+.bar{height:8px;background:var(--chip);border-radius:9px;overflow:hidden;margin:6px 0 10px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ok),#34d399);transition:width .4s}
+.task{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line)}
+.task input[type=checkbox]{width:20px;height:20px;margin-top:2px;accent-color:var(--ok);flex:none}
+.task .t{flex:1;min-width:0}.task .t div{overflow-wrap:anywhere}
+.task.done .t div:first-child{text-decoration:line-through;color:var(--mut)}
+.badge{display:inline-block;font-size:11px;padding:1px 8px;border-radius:99px;background:rgba(245,158,11,.18);color:var(--warn);margin-top:3px}
+.badge.ok{background:rgba(16,185,129,.16);color:var(--ok)}
+.sm{color:var(--mut);font-size:12px}
+.btn{border:0;background:var(--pri);color:#fff;padding:9px 14px;border-radius:10px;cursor:pointer;font:inherit}
+.btn.ghost{background:var(--chip);color:var(--ink)}.btn.red{background:rgba(239,68,68,.15);color:var(--bad)}
+.icon{background:none;border:0;cursor:pointer;color:var(--mut);font-size:16px;padding:2px 6px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:12px}
+dialog{border:0;border-radius:18px;padding:20px;width:min(440px,92vw);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(10,12,25,.55)}
+label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
+input[type=text],input[type=date],input[type=number],select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}.tbl th,.tbl td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.scroll{overflow-x:auto}
+.empty{text-align:center;padding:40px 16px;color:var(--mut)}
+.banner{background:rgba(245,158,11,.15);color:var(--warn);padding:8px 12px;border-radius:10px;margin-bottom:12px;font-size:13px}
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.pr{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;margin-right:6px;vertical-align:middle;text-transform:uppercase}.pr.High{background:rgba(239,68,68,.16);color:var(--bad)}.pr.Medium{background:rgba(245,158,11,.18);color:var(--warn)}.pr.Low{background:rgba(16,185,129,.16);color:var(--ok)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><h1>📋 Audit Team Dashboard</h1><p id="sub">Daily tasks · performance · auto carry-forward</p></div>
+  <div class="dates"><button id="prev">‹</button><input type="date" id="day"><button id="next">›</button><button id="today">Today</button></div>
+</header>
+<div id="banner"></div>
+<div class="kpis" id="kpis"></div>
+<div class="tabs" id="tabs"></div>
+<div id="view"></div>
+</div>
+
+<dialog id="dlg"></dialog>
+
+<script>
+(function(){
+var COLORS=['#4f46e5','#0ea5e9','#10b981','#f59e0b','#ec4899','#8b5cf6','#ef4444','#14b8a6'];
+var iso=function(d){var z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
+var TODAY=iso(new Date());
+var S={day:TODAY,tab:'board',team:[],tasks:[],logs:[],db:null,filter:'all'};
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function shift(d,n){var x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return iso(x)}
+function fmt(d){return new Date(d+'T12:00:00').toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short',year:'numeric'})}
+function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+
+/* ---------- data layer (shared db when available, in-memory otherwise) ---------- */
+var mem={team:{},tasks:{},logs:{}};
+function save(col,id,data){
+  if(S.db){return S.db.collection(col).doc(id).set(data).catch(function(e){alert('Could not save: '+(e&&e.message||e))})}
+  mem[col][id]=data;load(col);render();return Promise.resolve();
+}
+function del(col,id){
+  if(S.db){return S.db.collection(col).doc(id).delete().catch(function(e){alert('Could not delete: '+(e&&e.message||e))})}
+  delete mem[col][id];load(col);render();return Promise.resolve();
+}
+function load(col){S[col]=Object.keys(mem[col]).map(function(k){var o=mem[col][k];o.id=k;return o})}
+function listen(col){
+  S.db.collection(col).onSnapshot(function(s){S[col]=s.docs.map(function(d){var o=d.data()||{};o.id=d.id;return o});render()},function(){});
+}
+
+/* ---------- logic ---------- */
+function tasksFor(day){
+  var out=[];
+  S.tasks.forEach(function(t){
+    if(t.date===day){out.push({t:t,carried:false})}
+    else if(!t.done&&t.date<day&&day>=TODAY){out.push({t:t,carried:true})}
+    else if(t.done&&t.doneOn===day&&t.date<day){out.push({t:t,carried:true})}
+  });
+  var R={High:0,Medium:1,Low:2};out.sort(function(a,b){return ((+!!a.t.done)-(+!!b.t.done))||(R[a.t.priority||'Medium']-R[b.t.priority||'Medium'])});
+  return out;
+}
+function empName(id){var e=S.team.filter(function(x){return x.id===id})[0];return e?e.name:'Unassigned'}
+function empColor(id){var i=S.team.findIndex(function(x){return x.id===id});return COLORS[(i<0?0:i)%COLORS.length]}
+function prio(t){var p=t.priority||'Medium';return '<span class="pr '+p+'">'+p+'</span>'}
+function stars(n){n=+n||0;return '★★★★★'.slice(0,n)+'☆☆☆☆☆'.slice(0,5-n)}
+
+/* ---------- render ---------- */
+function render(){
+  $('day').value=S.day;
+  $('banner').innerHTML=S.db?'':'<div class="banner">Preview mode: changes are not shared or saved. Open the published link while signed in to collaborate.</div>';
+  var list=tasksFor(S.day),done=list.filter(function(x){return x.t.done}).length,carried=list.filter(function(x){return x.carried&&!x.t.done}).length;
+  var pct=list.length?Math.round(done/list.length*100):0;
+  $('kpis').innerHTML=[['Tasks for '+(S.day===TODAY?'today':'the day'),list.length],['Completed',done],['Carried over',carried],['High priority pending',list.filter(function(x){return !x.t.done&&x.t.priority==='High'}).length],['Completion',pct+'%']]
+    .map(function(k){return '<div class="kpi"><b>'+k[1]+'</b><span>'+k[0]+'</span></div>'}).join('');
+  var tabs=[['board','Daily board'],['perf','End-of-day reports'],['team','Team']];
+  $('tabs').innerHTML=tabs.map(function(t){return '<button class="tab'+(S.tab===t[0]?' on':'')+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join('');
+  $('view').innerHTML=S.tab==='board'?board(list):S.tab==='perf'?perf():teamView();
+}
+
+function board(list){
+  if(!S.team.length)return '<div class="card empty"><p><b>No team members yet.</b></p><p>Add the employees working on this audit to get started.</p><button class="btn" data-act="addEmp">+ Add team member</button> <button class="btn ghost" data-act="sample">Load sample data</button></div>';
+  var h='<div class="row"><div><b>'+esc(fmt(S.day))+'</b></div><div><button class="btn ghost" data-act="plan">📅 Audit plan (multi-day)</button> <button class="btn" data-act="addTask">+ Add task</button></div></div><div class="grid">';
+  S.team.forEach(function(e){
+    var mine=list.filter(function(x){return x.t.assignee===e.id});
+    var d=mine.filter(function(x){return x.t.done}).length,p=mine.length?Math.round(d/mine.length*100):0;
+    var lg=S.logs.filter(function(l){return l.emp===e.id&&l.date===S.day})[0];
+    h+='<div class="card"><div class="emp-h"><div class="av" style="background:'+empColor(e.id)+'">'+esc((e.name||'?').charAt(0).toUpperCase())+'</div><div><h3>'+esc(e.name)+'</h3><small>'+esc(e.role||'Auditor')+' · '+d+'/'+mine.length+' done</small></div></div><div class="bar"><i style="width:'+p+'%"></i></div>';
+    if(!mine.length)h+='<div class="sm" style="padding:8px 0">No tasks for this day.</div>';
+    mine.forEach(function(x){var t=x.t;
+      h+='<div class="task'+(t.done?' done':'')+'"><input type="checkbox" data-chk="'+t.id+'"'+(t.done?' checked':'')+'><div class="t"><div>'+prio(t)+esc(t.title)+'</div>'
+       +(t.note?'<div class="sm">'+esc(t.note)+'</div>':'')
+       +(x.carried&&!t.done?'<span class="badge">↻ Carried from '+esc(fmt(t.date))+'</span>':'')
+       +(t.done&&x.carried?'<span class="badge ok">Completed (was due '+esc(fmt(t.date))+')</span>':'')
+       +'</div><button class="icon" title="Edit" data-edit="'+t.id+'">✎</button></div>';
+    });
+    h+='<div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="sm">'+(lg?'Achieved '+(lg.pct==null?'–':lg.pct+'%')+' · '+stars(lg.rating):'No end-of-day remark yet')+'</span><button class="btn ghost" data-perf="'+e.id+'">'+(lg?'Edit remark':'End-of-day remark')+'</button></div>'+(lg&&lg.carry?'<div class="sm" style="margin-top:6px">↻ Carry forward: '+esc(lg.carry)+'</div>':'')+'</div>';
+  });
+  return h+'</div>';
+}
+
+function perf(){
+  var rows=S.logs.slice().sort(function(a,b){return a.date<b.date?1:-1});
+  var h='<div class="card"><div class="row"><b>Daily performance entries</b></div>';
+  if(!rows.length)return h+'<div class="empty">Nothing logged yet. Employees can log from the Daily board.</div></div>';
+  h+='<div class="scroll"><table class="tbl"><tr><th>Date</th><th>Employee</th><th>Achieved</th><th>Rating</th><th>Hours</th><th>Remark</th><th>Carry forward</th></tr>';
+  rows.forEach(function(l){h+='<tr><td>'+esc(fmt(l.date))+'</td><td>'+esc(empName(l.emp))+'</td><td>'+(l.pct==null?'–':l.pct+'%')+'</td><td>'+stars(l.rating)+'</td><td>'+esc(l.hours||0)+'</td><td>'+esc(l.summary)+'</td><td>'+esc(l.carry||'')+'</td></tr>'});
+  return h+'</table></div></div>';
+}
+
+function teamView(){
+  var h='<div class="row"><b>Audit team</b><button class="btn" data-act="addEmp">+ Add team member</button></div><div class="grid">';
+  S.team.forEach(function(e){
+    var all=S.tasks.filter(function(t){return t.assignee===e.id}),dn=all.filter(function(t){return t.done}).length;
+    var ls=S.logs.filter(function(l){return l.emp===e.id}),avg=ls.length?(ls.reduce(function(a,l){return a+(+l.rating||0)},0)/ls.length).toFixed(1):'–';
+    h+='<div class="card"><div class="emp-h"><div class="av" style="background:'+empColor(e.id)+'">'+esc((e.name||'?').charAt(0).toUpperCase())+'</div><div><h3>'+esc(e.name)+'</h3><small>'+esc(e.role||'Auditor')+'</small></div></div>'
+     +'<div class="sm">Tasks completed: <b>'+dn+'/'+all.length+'</b> · Avg rating: <b>'+avg+'</b></div>'
+     +'<div class="actions" style="justify-content:flex-start"><button class="btn ghost" data-editemp="'+e.id+'">Edit</button></div></div>';
+  });
+  return h+'</div>';
+}
+
+/* ---------- dialogs ---------- */
+function open(html){var d=$('dlg');d.innerHTML=html;if(!d.open)d.showModal()}
+function close(){$('dlg').close()}
+function teamOpts(sel){return S.team.map(function(e){return '<option value="'+e.id+'"'+(e.id===sel?' selected':'')+'>'+esc(e.name)+'</option>'}).join('')}
+
+function taskDlg(id){
+  var t=S.tasks.filter(function(x){return x.id===id})[0]||{title:'',assignee:S.team[0]&&S.team[0].id,date:S.day,note:'',priority:'Medium'};
+  open('<h3 style="margin:0">'+(id?'Edit task':'New task')+'</h3><label>Task</label><input type="text" id="f_title" value="'+esc(t.title)+'">'
+   +'<label>Assigned to</label><select id="f_as">'+teamOpts(t.assignee)+'</select><label>Due date</label><input type="date" id="f_date" value="'+esc(t.date)+'">'
+   +'<label>Priority</label><select id="f_pr">'+['High','Medium','Low'].map(function(p){return '<option'+((t.priority||'Medium')===p?' selected':'')+'>'+p+'</option>'}).join('')+'</select>'+(id?'':'<label>Repeat every day until (optional, for multi-day tasks)</label><input type="date" id="f_until">')+'<label>Notes (optional)</label><textarea id="f_note" rows="2">'+esc(t.note)+'</textarea>'
+   +'<div class="actions">'+(id?'<button class="btn red" id="f_del">Delete</button>':'')+'<button class="btn ghost" id="f_x">Cancel</button><button class="btn" id="f_ok">Save</button></div>');
+  $('f_x').onclick=close;
+  if(id)$('f_del').onclick=function(){if(confirm('Delete this task?')){del('tasks',id);close()}};
+  $('f_ok').onclick=function(){var ti=$('f_title').value.trim();if(!ti){$('f_title').focus();return}
+    var o={title:ti,assignee:$('f_as').value,date:$('f_date').value||S.day,note:$('f_note').value.trim(),done:!!t.done,doneOn:t.doneOn||'',priority:$('f_pr').value};
+    if(id){save('tasks',id,o)}else{var u=$('f_until')&&$('f_until').value,d=o.date;save('tasks',uid(),o);for(var n=0;u&&d<u&&n<90;n++){d=shift(d,1);var c={};for(var k in o)c[k]=o[k];c.date=d;save('tasks',uid(),c)}}close()};
+}
+function empDlg(id){
+  var e=S.team.filter(function(x){return x.id===id})[0]||{name:'',role:''};
+  open('<h3 style="margin:0">'+(id?'Edit team member':'New team member')+'</h3><label>Name</label><input type="text" id="f_n" value="'+esc(e.name)+'"><label>Role</label><input type="text" id="f_r" value="'+esc(e.role)+'" placeholder="e.g. Senior Auditor">'
+   +'<div class="actions">'+(id?'<button class="btn red" id="f_del">Remove</button>':'')+'<button class="btn ghost" id="f_x">Cancel</button><button class="btn" id="f_ok">Save</button></div>');
+  $('f_x').onclick=close;
+  if(id)$('f_del').onclick=function(){if(confirm('Remove this team member?')){del('team',id);close()}};
+  $('f_ok').onclick=function(){var n=$('f_n').value.trim();if(!n){$('f_n').focus();return}save('team',id||uid(),{name:n,role:$('f_r').value.trim()});close()};
+}
+function nth(start,n,skip){var d=start;function wk(x){var g=new Date(x+'T12:00:00').getDay();return g===0||g===6}
+  if(skip)while(wk(d))d=shift(d,1);
+  for(var i=1;i<n;i++){d=shift(d,1);if(skip)while(wk(d))d=shift(d,1)}return d}
+function planDlg(){
+  open('<h3 style="margin:0">Audit plan for one employee</h3><div class="sm">Add all tasks for several days in one go.</div><label>Employee</label><select id="p_e">'+teamOpts()+'</select><label>Day 1 is</label><input type="date" id="p_d" value="'+esc(S.day)+'"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="p_w" checked style="width:auto"> Skip Saturdays &amp; Sundays</label><label>One task per line: Day | Task | Priority (High/Medium/Low)</label><textarea id="p_t" rows="8" placeholder="1 | Vouch purchase invoices | High\n1 | Collect bank statements | Medium\n2 | Debtor confirmations | High\n3 | Draft observations | Low"></textarea><div class="actions"><button class="btn ghost" id="f_x">Cancel</button><button class="btn" id="f_ok">Add plan</button></div>');
+  $('f_x').onclick=close;
+  $('f_ok').onclick=function(){var emp=$('p_e').value,start=$('p_d').value||S.day,skip=$('p_w').checked,n=0;
+    $('p_t').value.split('\n').forEach(function(line){line=line.trim();if(!line)return;var p=line.split('|').map(function(s){return s.trim()}),day=1,title,pr='Medium';
+      if(p.length>1&&/^(day\s*)?\d+$/i.test(p[0])){day=Math.max(1,+p[0].replace(/\D/g,''));title=p[1];if(p[2])pr=/^h/i.test(p[2])?'High':/^l/i.test(p[2])?'Low':'Medium'}else title=p[0];
+      if(!title)return;save('tasks',uid(),{title:title,assignee:emp,date:nth(start,day,skip),priority:pr,note:'',done:false,doneOn:''});n++});
+    if(!n){$('p_t').focus();return}close();S.day=nth(start,1,skip);render()};
+}
+function perfDlg(emp){
+  var l=S.logs.filter(function(x){return x.emp===emp&&x.date===S.day})[0]||{summary:'',carry:'',hours:'',rating:4,pct:100};
+  var pend=tasksFor(S.day).filter(function(x){return x.t.assignee===emp&&!x.t.done}).map(function(x){return x.t.title}),pc=l.pct==null?100:l.pct;
+  open('<h3 style="margin:0">End-of-day remark · '+esc(empName(emp))+'</h3><div class="sm">'+esc(fmt(S.day))+'</div>'
+   +'<label>How much of today’s work did you achieve? <b id="f_pv">'+pc+'%</b></label><input type="range" id="f_p" min="0" max="100" step="5" value="'+pc+'" style="width:100%">'
+   +'<label>What did you achieve today?</label><textarea id="f_s" rows="3">'+esc(l.summary)+'</textarea>'
+   +'<label>What is to be carried forward to tomorrow?</label><textarea id="f_c" rows="2">'+esc(l.carry||pend.join('; '))+'</textarea>'
+   +(pend.length?'<div class="sm">Unticked tasks carry forward automatically.</div>':'')
+   +'<label>Hours worked</label><input type="number" id="f_h" min="0" max="24" step="0.5" value="'+esc(l.hours)+'"><label>Self-rating</label><select id="f_rt">'+[5,4,3,2,1].map(function(n){return '<option value="'+n+'"'+(+l.rating===n?' selected':'')+'>'+stars(n)+'</option>'}).join('')+'</select>'
+   +'<div class="actions"><button class="btn ghost" id="f_x">Cancel</button><button class="btn" id="f_ok">Save remark</button></div>');
+  $('f_x').onclick=close;
+  $('f_p').oninput=function(){$('f_pv').textContent=this.value+'%'};
+  $('f_ok').onclick=function(){save('logs',S.day+'_'+emp,{emp:emp,date:S.day,summary:$('f_s').value.trim(),carry:$('f_c').value.trim(),pct:+$('f_p').value,hours:+$('f_h').value||0,rating:+$('f_rt').value});close()};
+}
+function sample(){
+  var a=uid(),b=uid(),c=uid();
+  save('team',a,{name:'Aarav Sharma',role:'Senior Auditor'});save('team',b,{name:'Meera Iyer',role:'Audit Associate'});save('team',c,{name:'Rohan Verma',role:'Audit Associate'});
+  var y=shift(TODAY,-1);
+  [[a,'Vouch purchase invoices (sample 1–25)',y,false],[a,'Review bank reconciliation',TODAY,false],[b,'Confirm debtor balances',TODAY,false],[b,'Fixed asset verification',y,true],[c,'Inventory count sheet reconciliation',TODAY,false]]
+   .forEach(function(r){save('tasks',uid(),{title:r[0]&&r[1],assignee:r[0],date:r[2],done:r[3],doneOn:r[3]?r[2]:'',note:'',priority:/bank|Vouch/.test(r[1])?'High':'Medium'})});
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',function(ev){
+  var el=ev.target.closest('[data-tab],[data-act],[data-edit],[data-perf],[data-editemp]');if(!el)return;
+  if(el.dataset.tab){S.tab=el.dataset.tab;render()}
+  else if(el.dataset.act==='addTask'){if(!S.team.length){empDlg()}else taskDlg()}
+  else if(el.dataset.act==='addEmp')empDlg();
+  else if(el.dataset.act==='plan'){if(!S.team.length){empDlg()}else planDlg()}
+  else if(el.dataset.act==='sample')sample();
+  else if(el.dataset.edit)taskDlg(el.dataset.edit);
+  else if(el.dataset.perf)perfDlg(el.dataset.perf);
+  else if(el.dataset.editemp)empDlg(el.dataset.editemp);
+});
+document.addEventListener('change',function(ev){
+  var id=ev.target.dataset&&ev.target.dataset.chk;if(!id)return;
+  var t=S.tasks.filter(function(x){return x.id===id})[0];if(!t)return;
+  var o={};for(var k in t)if(k!=='id')o[k]=t[k];
+  o.done=ev.target.checked;o.doneOn=o.done?S.day:'';save('tasks',id,o);
+});
+$('day').onchange=function(){S.day=this.value||TODAY;render()};
+$('prev').onclick=function(){S.day=shift(S.day,-1);render()};
+$('next').onclick=function(){S.day=shift(S.day,1);render()};
+$('today').onclick=function(){S.day=TODAY;render()};
+
+render();
+/* ---------- connect shared database ---------- */
+(function(){
+  if(!window.claude||!claude.use)return;
+  claude.use('db').then(function(db){
+    if(!db)return;S.db=db;['team','tasks','logs'].forEach(listen);render();
+  }).catch(function(){});
+})();
+})();
+</script>
+</body>
+</html>
